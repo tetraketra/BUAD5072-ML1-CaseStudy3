@@ -61,55 +61,43 @@ range(log(airData$FARE)) #This is tighter,
 #### INVESTIGATE X TRANSFORMS #### ---------------------------------------------
 par(mfrow = c(4, 2))
 for (var in c("HI", "S_INCOME", "E_INCOME", "S_POP")) {
-    hist(airData$FARE, main = var); hist(log(airData[[var]]), main = glue("log({var})"))
+    hist(airData[[var]], main = "original", xlab = var); hist(log(airData[[var]]), main = "logged", xlab = glue("log({var})"))
     }
 
 par(mfrow = c(3, 2))
 for (var in c("E_POP", "DISTANCE", "PAX")) {
-    hist(airData$FARE, main = var); hist(log(airData[[var]]), main = glue("log({var})"))
+    hist(airData[[var]], main = "original", xlab = var); hist(log(airData[[var]]), main = "logged", xlab = glue("log({var})"))
     }
 
 par(default)
 
-#The log transform reduces skewness in all spotlighted variables, but the noticable ones were...
+#The log transform reduces skewness in all spotlighted variables, but the noticeable ones were...
     #HI, which now has a central hump.
-    #S & E_INCOME, which now have more-even tails.
-    #S & E_POP, which is more symmetric.
-    #DISTANCE, which looks significantly closer ot normal.
+    #S & E_POP, which are more central and symmetric.
+    #DISTANCE & PAX, which looks significantly closer to normal.
 
-lm.logX <- lm(FARE ~ VACATION + SW + log(HI) +
-              log(S_INCOME) + log(E_INCOME) +
-              log(S_POP) + log(E_POP) + SLOT +
-              GATE + log(DISTANCE) + PAX, data = airData)
-summary(lm.logX)
-
-#This lowered our R^2. We should apply the LOG function to only the ones that are most in-need AND most-benefitted.
-
-lm.logX.2 <- lm(FARE ~ VACATION + SW + log(HI) +
+lm.mixed_semilog <- lm(FARE ~ VACATION + SW + log(HI) +
               S_INCOME + E_INCOME +
-              S_POP + E_POP + SLOT +
-              GATE + log(DISTANCE) + PAX, data = airData)
-summary(lm.logX.2)
-
-#This also lowered our R^2 from lm.simple.2.
-#Let's rerun these with the logged dependent variable from the previous section.
-
-lm.logXY <- lm(log(FARE) ~ VACATION + SW + log(HI) +
-              S_INCOME + E_INCOME +
-              S_POP + E_POP + SLOT +
-              GATE + log(DISTANCE) + PAX, data = airData)
-cor(airData$FARE, predict(lm.logXY, newdata = airData))
-
-lm.logXY.2 <- lm(log(FARE) ~ VACATION + SW + log(HI) +
-              log(S_INCOME) + log(E_INCOME) +
               log(S_POP) + log(E_POP) + SLOT +
-              GATE + log(DISTANCE) + PAX, data = airData)
-cor(airData$FARE, predict(lm.logXY.2, newdata = airData))
+              GATE + log(DISTANCE) + log(PAX), data = airData)
+summary(lm.mixed_semilog)
 
-#Minimal log transforms of the most egregious independent variables, ...
-#then a log of the dependent variable was the most effective model.
+#This lowered our R^2 from lm.simple.2.
+#Let's rerun this with the logged dependent variable from the previous section.
 
-lm.bestVars <- lm.logXY.2
+lm.mixed_loglog <- lm(log(FARE) ~ VACATION + SW + log(HI) +
+              S_INCOME + E_INCOME +
+              log(S_POP) + log(E_POP) + SLOT +
+              GATE + log(DISTANCE) + log(PAX), data = airData)
+cor(airData$FARE, exp(lm.mixed_loglog$fitted.values)) #Better
+
+#Now compare to the original non-log model.
+cor(airData$FARE, exp(lm.mixed_loglog$fitted.values)) #new model
+cor(airData$FARE, lm.simple.2$fitted.values) #old model
+#This is a mild improvement.
+
+
+lm.bestVars <- lm.mixed_loglog
 
 
 
