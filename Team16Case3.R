@@ -71,7 +71,6 @@ for (var in c("E_POP", "DISTANCE", "PAX")) {
 
 par(default)
 
-
 #The log transform reduces skewness in all spotlighted variables, but the noticable ones were...
     #HI, which now has a central hump.
     #S & E_INCOME, which now have more-even tails.
