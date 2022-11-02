@@ -92,7 +92,7 @@ lm.logX.2 <- lm(FARE ~ VACATION + SW + log(HI) +
 summary(lm.logX.2)
 
 #This also lowered our R^2 from lm.simple.2.
-#Let's rerun these with a logged dependent variable.
+#Let's rerun these with the logged dependent variable from the previous section.
 
 lm.logXY <- lm(log(FARE) ~ VACATION + SW + log(HI) +
               S_INCOME + E_INCOME +
