@@ -24,10 +24,10 @@ par(mfrow = c(3, 3))
 
 pairs(airData[unlist(lapply(airData, is.numeric))], lower.panel = NULL) #That's pretty hard to interpret.
 
-numeric <- airData[unlist(lapply(airData, is.numeric))][-1]
+numeric <- airData[unlist(lapply(airData, is.numeric))][-10]
 for (i in 1:ncol(numeric)) {
-    plot(numeric[,i], airData$COUPON, xlab = names(numeric)[i], ylab = "COUPON")
-    #HI, DISTANCE, PAX, and FARE look possible promising given some transformations. Hard to tell with the rest.
+    plot(numeric[,i], airData$FARE, xlab = names(numeric)[i], ylab = "FARE")
+    #Coupon, the incomes, population, and distance look possibly decent.
     }
 
 par(default)
@@ -36,64 +36,99 @@ par(default)
 
 
 #### SIMPLE LINEAR MODEL #### --------------------------------------------------
-lm.simple <- lm(COUPON ~ ., data = airData)
+lm.simple <- lm(FARE ~ ., data = airData)
 summary(lm.simple) #This is already significant enough, but I'd like to remove insignificant variables for parsimony/
 
-lm.simple.2 <- lm(COUPON ~ HI + S_INCOME + SLOT + DISTANCE + PAX, data = airData)
-summary(lm.simple.2) #Nearly as good and overwhelmingly more parsimonious. Adj R^2: 0.6662
+lm.simple.2 <- lm(FARE ~ . - COUPON - NEW, data = airData)
+summary(lm.simple.2) #Nearly as good and more parsimonious.
 
-#TODO: ASSUMPTIONS <---- <---- <--- <--- <---
+#TODO ASSUMPTIONS - ANDREW
 
 
 
 
 #### INVESTIGATE Y TRANSFORMS #### ---------------------------------------------
-hist(airData$COUPON)
-range(airData$COUPON) #Long skew, but ultimately a tight range (1.00 - 1.94).
-hist(log(airData$COUPON))
-range(log(airData$COUPON)) #This is tighter, but not enough for the loss of interpretation to be worth it.
+hist(airData$FARE)
+range(airData$FARE)
+hist(log(airData$FARE))
+range(log(airData$FARE)) #This is tighter,
+
+#TODO: ANDREW
 
 
 
 
 #### INVESTIGATE X TRANSFORMS #### ---------------------------------------------
-par(mfrow = c(2, 2))
+par(mfrow = c(4, 2))
+for (var in c("HI", "S_INCOME", "E_INCOME", "S_POP")) {
+    hist(airData$FARE, main = var); hist(log(airData[[var]]), main = glue("log({var})"))
+    }
 
-hist(airData$HI) #Only slightly skewed.
-hist(airData$S_INCOME) #Slightly spiky to the right of the mean, but otherwise acceptable.
-hist(airData$DISTANCE) #Significant right skew.
-hist(airData$PAX) #Extremely long tail.
+par(mfrow = c(3, 2))
+for (var in c("E_POP", "DISTANCE", "PAX")) {
+    hist(airData$FARE, main = var); hist(log(airData[[var]]), main = glue("log({var})"))
+    }
 
-#We believe that the log() transform would compact DISTANCE's and PAX's tails.
+par(default)
 
-hist(airData$HI)
-hist(airData$S_INCOME)
-hist(log(airData$DISTANCE)) #Now only a slight left skew.
-hist(log(airData$PAX)) #Much less skew.
 
-lm.transformed <- lm(COUPON ~ HI + S_INCOME + SLOT + log(DISTANCE) + log(PAX), data = airData)
-summary(lm.transformed) #Slightly higher Adj R^2 of 0.6888. This might be worth the interpretability loss if we can simplify.
+#The log transform reduces skewness in all spotlighted variables, but the noticable ones were...
+    #HI, which now has a central hump.
+    #S & E_INCOME, which now have more-even tails.
+    #S & E_POP, which is more symmetric.
+    #DISTANCE, which looks significantly closer ot normal.
 
-lm.transformed <- lm(COUPON ~ HI + SLOT + log(DISTANCE) + log(PAX), data = airData)
-summary(lm.transformed) #Barely lost any Adj R^2 (now 0.6877) but dropped a variable. More parsimonious.
+lm.logX <- lm(FARE ~ VACATION + SW + log(HI) +
+              log(S_INCOME) + log(E_INCOME) +
+              log(S_POP) + log(E_POP) + SLOT +
+              GATE + log(DISTANCE) + PAX, data = airData)
+summary(lm.logX)
+
+#This lowered our R^2. We should apply the LOG function to only the ones that are most in-need AND most-benefitted.
+
+lm.logX.2 <- lm(FARE ~ VACATION + SW + log(HI) +
+              S_INCOME + E_INCOME +
+              S_POP + E_POP + SLOT +
+              GATE + log(DISTANCE) + PAX, data = airData)
+summary(lm.logX.2)
+
+#This also lowered our R^2 from lm.simple.2.
+#Let's rerun these with a logged dependent variable.
+
+lm.logXY <- lm(log(FARE) ~ VACATION + SW + log(HI) +
+              S_INCOME + E_INCOME +
+              S_POP + E_POP + SLOT +
+              GATE + log(DISTANCE) + PAX, data = airData)
+cor(airData$FARE, predict(lm.logXY, newdata = airData))
+
+lm.logXY.2 <- lm(log(FARE) ~ VACATION + SW + log(HI) +
+              log(S_INCOME) + log(E_INCOME) +
+              log(S_POP) + log(E_POP) + SLOT +
+              GATE + log(DISTANCE) + PAX, data = airData)
+cor(airData$FARE, predict(lm.logXY.2, newdata = airData))
+
+#Minimal log transforms of the most egregious independent variables, ...
+#then a log of the dependent variable was the most effective model.
+
+lm.bestVars <- lm.logXY.2
 
 
 
 
 #### OUTLIERS #### -------------------------------------------------------------
-#TODO
+#TODO: JEFFRI
 
 
 
 
 #### FINAL REGRESSION EQUATION AND STATS#### -----------------------------------
-#TODO
+#TODO: JIACAN
 
 
 
 
 #### MODEL SUMMARY #### --------------------------------------------------------
-#TODO
+#TODO: SMITA
 
 
 
