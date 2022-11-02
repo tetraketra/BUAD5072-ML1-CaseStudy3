@@ -75,7 +75,7 @@ lm.transformed <- lm(COUPON ~ HI + S_INCOME + SLOT + log(DISTANCE) + log(PAX), d
 summary(lm.transformed) #Slightly higher Adj R^2 of 0.6888. This might be worth the interpretability loss if we can simplify.
 
 lm.transformed <- lm(COUPON ~ HI + SLOT + log(DISTANCE) + log(PAX), data = airData)
-summary(lm.transformed) #Barely lost any Adj R^2 (now 0.6877) but dropped a variable. More parisomonious.
+summary(lm.transformed) #Barely lost any Adj R^2 (now 0.6877) but dropped a variable. More parsimonious.
 
 
 
