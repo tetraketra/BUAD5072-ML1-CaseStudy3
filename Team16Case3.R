@@ -14,8 +14,8 @@ if (!require(lmtest)) {install.packages("lmtest"); library(lmtest)}
 if (!require(glue)) {install.packages("glue"); library(glue)}
 if (!require(mltools)) {install.packages("mltools"); library(mltools)}
 airData <- read.csv("case3.csv", stringsAsFactors = T)[-1:-4]
-
-
+##########install.packages("moments")
+library(moments)
 
 
 #### INITIAL EXPLORATION #### --------------------------------------------------
@@ -44,8 +44,23 @@ summary(lm.simple.2) #Nearly as good and more parsimonious.
 
 #TODO ASSUMPTIONS - ANDREW
 
+hist(lm.simple.2$residuals)
+# Histogram of residuals looks normally distributed
+mean(lm.simple.2$residuals)
+# Mean is very close to 0, also indicating that it is normally distributed
 
+par(mfrow=(c(2,2)))
+plot(lm.simple.2)
+# The first plot Residuals vs Fitted which tests for normality, looks good, no extreme outliers or patterns in the data.
+# The Normal QQ Plot which tests for linearity looks good, the residuals fit on a line very well.
+# Scale-Location looks good as well with a pretty straight horizontal line similar to the first plot and no pattern in the data. This plot tests for homoskedascticity and it appears to be homoskedasctic meaning the variances are constant. This conflicts with the BP Test done below.
+# The Residuals vs Leverage plot seems clustered to the left, but the line is horizontal and pretty flat, along with no points beyond Cook's line so it looks good.
 
+lmtest::bptest(lm.simple.2)
+# The p value is very low, so we can reject the null hypothesis which is homoskedasticity, and conclude the data is heteroskedastic.
+
+car::vif(lm.simple.2)
+# This tests for multicollinearity, but all of the variables have very low values, all under 3, so we can say there is no multicollinearity in the linear model.
 
 #### INVESTIGATE Y TRANSFORMS #### ---------------------------------------------
 hist(airData$FARE)
@@ -55,8 +70,30 @@ range(log(airData$FARE)) #This is tighter,
 
 #TODO: ANDREW
 
+skewness(airData$FARE)
+# 0.6208544
 
+skewness(log(airData$FARE))
+# -0.2640935
 
+#skewness is a measure of assumetru and although the histogram of FARE does not appear as normal as the histogram of log(FARE), the skewness is not very high, only 0.62. Anything under 1 is not considered to be highly skewed. 0.62 is considered moderately skewed, but using the log(FARE) a lot of intepretability is lost.
+
+kurtosis(airData$FARE)
+# 2.662211
+
+kurtosis(log(airData$FARE))
+# 2.306927
+
+# A standard normal distribution has a kurtosis of 3. Both FARE and log(FARE) have similiar kurtosis and both are close to 3, though FARE is slightly better.
+
+shapiro.test(airData$FARE)
+# W = 0.95358, p-value = 2.732e-13
+shapiro.test(log(airData$FARE))
+# W = 0.97821, p-value = 3.811e-08
+
+# The Shapiro-Wilk normality test measures normality on a scale of 0 to 1 with 1 indicating normality and although log(FARE) is slightly higher, both still fail to reach normality because the p-value for both is very very low which means we reject the null hypothesis, which is normality. So neither are normal and log(FARE) is not much better, so we keep FARE and do not transform to log(FARE).
+
+# Overall FARE is not perfectly normal and log(FARE) appears slightly better visually in a histogram however, interpretability is lost when using log(FARE) and skew is not too bad for FARE and kurtosis is actually better for FARE.
 
 #### INVESTIGATE X TRANSFORMS #### ---------------------------------------------
 par(mfrow = c(4, 2))
