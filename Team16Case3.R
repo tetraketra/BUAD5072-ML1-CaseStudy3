@@ -13,9 +13,10 @@ rm(list = ls())
 if (!require(lmtest)) {install.packages("lmtest"); library(lmtest)}
 if (!require(glue)) {install.packages("glue"); library(glue)}
 if (!require(mltools)) {install.packages("mltools"); library(mltools)}
+if (!require(moments)) {install.packages("moments"); library(moments)}
 airData <- read.csv("case3.csv", stringsAsFactors = T)[-1:-4]
-##########install.packages("moments")
-library(moments)
+
+
 
 
 #### INITIAL EXPLORATION #### --------------------------------------------------
@@ -30,7 +31,7 @@ for (i in 1:ncol(numeric)) {
     #Coupon, the incomes, population, and distance look possibly decent.
     }
 
-par(default)
+par(mfrow = c(1, 1))
 
 
 
@@ -42,14 +43,12 @@ summary(lm.simple) #This is already significant enough, but I'd like to remove i
 lm.simple.2 <- lm(FARE ~ . - COUPON - NEW, data = airData)
 summary(lm.simple.2) #Nearly as good and more parsimonious.
 
-#TODO ASSUMPTIONS - ANDREW
-
 hist(lm.simple.2$residuals)
-# Histogram of residuals looks normally distributed
+    # Histogram of residuals looks normally distributed
 mean(lm.simple.2$residuals)
-# Mean is very close to 0, also indicating that it is normally distributed
+    # Mean is very close to 0, also indicating that it is normally distributed
 
-par(mfrow=(c(2,2)))
+par(default)
 plot(lm.simple.2)
 # The first plot Residuals vs Fitted which tests for normality, looks good, no extreme outliers or patterns in the data.
 # The Normal QQ Plot which tests for linearity looks good, the residuals fit on a line very well.
@@ -62,13 +61,17 @@ lmtest::bptest(lm.simple.2)
 car::vif(lm.simple.2)
 # This tests for multicollinearity, but all of the variables have very low values, all under 3, so we can say there is no multicollinearity in the linear model.
 
+
+
+
 #### INVESTIGATE Y TRANSFORMS #### ---------------------------------------------
+
+#Lets investigate visually first.
+par(mfrow = c(2,1))
 hist(airData$FARE)
 range(airData$FARE)
 hist(log(airData$FARE))
 range(log(airData$FARE)) #This is tighter,
-
-#TODO: ANDREW
 
 skewness(airData$FARE)
 # 0.6208544
@@ -76,7 +79,7 @@ skewness(airData$FARE)
 skewness(log(airData$FARE))
 # -0.2640935
 
-#skewness is a measure of assumetru and although the histogram of FARE does not appear as normal as the histogram of log(FARE), the skewness is not very high, only 0.62. Anything under 1 is not considered to be highly skewed. 0.62 is considered moderately skewed, but using the log(FARE) a lot of intepretability is lost.
+#skewness is a measure of assymetry and although the histogram of FARE does not appear as normal as the histogram of log(FARE), the skewness is not very high, only 0.62. Anything under 1 is not considered to be highly skewed. 0.62 is considered moderately skewed, but using the log(FARE) a lot of intepretability is lost.
 
 kurtosis(airData$FARE)
 # 2.662211
@@ -94,6 +97,9 @@ shapiro.test(log(airData$FARE))
 # The Shapiro-Wilk normality test measures normality on a scale of 0 to 1 with 1 indicating normality and although log(FARE) is slightly higher, both still fail to reach normality because the p-value for both is very very low which means we reject the null hypothesis, which is normality. So neither are normal and log(FARE) is not much better, so we keep FARE and do not transform to log(FARE).
 
 # Overall FARE is not perfectly normal and log(FARE) appears slightly better visually in a histogram however, interpretability is lost when using log(FARE) and skew is not too bad for FARE and kurtosis is actually better for FARE. Neither distributions pass the Shapiro-Wilk normality test so using lof(FARE) does not seem to make sense, we will stick with FARE and re-examine after looking at the x variables.
+
+
+
 
 #### INVESTIGATE X TRANSFORMS #### ---------------------------------------------
 par(mfrow = c(4, 2))
@@ -132,7 +138,6 @@ cor(airData$FARE, exp(lm.mixed_loglog$fitted.values)) #Better
 cor(airData$FARE, exp(lm.mixed_loglog$fitted.values)) #new model
 cor(airData$FARE, lm.simple.2$fitted.values) #old model
 #This is a mild improvement.
-
 
 lm.bestVars <- lm.mixed_loglog
 
