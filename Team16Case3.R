@@ -93,7 +93,7 @@ shapiro.test(log(airData$FARE))
 
 # The Shapiro-Wilk normality test measures normality on a scale of 0 to 1 with 1 indicating normality and although log(FARE) is slightly higher, both still fail to reach normality because the p-value for both is very very low which means we reject the null hypothesis, which is normality. So neither are normal and log(FARE) is not much better, so we keep FARE and do not transform to log(FARE).
 
-# Overall FARE is not perfectly normal and log(FARE) appears slightly better visually in a histogram however, interpretability is lost when using log(FARE) and skew is not too bad for FARE and kurtosis is actually better for FARE.
+# Overall FARE is not perfectly normal and log(FARE) appears slightly better visually in a histogram however, interpretability is lost when using log(FARE) and skew is not too bad for FARE and kurtosis is actually better for FARE. Neither distributions pass the Shapiro-Wilk normality test so using lof(FARE) does not seem to make sense, we will stick with FARE and re-examine after looking at the x variables.
 
 #### INVESTIGATE X TRANSFORMS #### ---------------------------------------------
 par(mfrow = c(4, 2))
