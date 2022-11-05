@@ -14,6 +14,8 @@ if (!require(lmtest)) {install.packages("lmtest"); library(lmtest)}
 if (!require(glue)) {install.packages("glue"); library(glue)}
 if (!require(mltools)) {install.packages("mltools"); library(mltools)}
 if (!require(moments)) {install.packages("moments"); library(moments)}
+if (!require(broom)) {install.packages("broom"); library(broom)}
+if (!require(tidyverse)) {install.packages("tidyverse"); library(tidyverse)}
 airData <- read.csv("case3.csv", stringsAsFactors = T)[-1:-4]
 
 
@@ -145,9 +147,11 @@ lm.bestVars <- lm.mixed_loglog
 
 
 #### OUTLIERS #### -------------------------------------------------------------
-#TODO: JEFFRI
-
-
+modelResults <- augment(lm.bestVars) %>% mutate(index = 1:n())
+sum(abs(modelResults$.std.resid)>3) #0 outliers three standard deviations away and beyond in this model
+sum(abs(modelResults$.std.resid)>2) #25 outliers two standard deviations away and beyond in this model
+subset(modelResults$index,(abs(modelResults$.std.resid)>2)) #Shows the rows containing 25 outliers from the line above
+airData <- airData[-c(61,81,82,93,121,130,304,307,313,342,363,388,392,410,426,445,470,476,483,494,506,525,544,555,570),]; summary(airData) #Removes the 25 outliers
 
 
 #### FINAL REGRESSION EQUATION AND STATS#### -----------------------------------
