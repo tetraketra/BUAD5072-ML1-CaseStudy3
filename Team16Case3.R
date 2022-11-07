@@ -96,9 +96,15 @@ shapiro.test(airData$FARE)
 shapiro.test(log(airData$FARE))
 # W = 0.97821, p-value = 3.811e-08
 
-# The Shapiro-Wilk normality test measures normality on a scale of 0 to 1 with 1 indicating normality and although log(FARE) is slightly higher, both still fail to reach normality because the p-value for both is very very low which means we reject the null hypothesis, which is normality. So neither are normal and log(FARE) is not much better, so we keep FARE and do not transform to log(FARE).
+# The Shapiro-Wilk normality test measures normality on a scale of 0 to 1 with 1 indicating normality and
+# although log(FARE) is slightly higher, both still fail to reach normality because the p-value for both is
+# very very low which means we reject the null hypothesis, which is normality. So neither are normal and log(FARE)
+# is not much better, so we keep FARE and do not transform to log(FARE).
 
-# Overall FARE is not perfectly normal and log(FARE) appears slightly better visually in a histogram however, interpretability is lost when using log(FARE) and skew is not too bad for FARE and kurtosis is actually better for FARE. Neither distributions pass the Shapiro-Wilk normality test so using lof(FARE) does not seem to make sense, we will stick with FARE and re-examine after looking at the x variables.
+# Overall FARE is not perfectly normal and log(FARE) appears slightly better visually in a histogram however,
+# interpretability is lost when using log(FARE) and skew is not too bad for FARE and kurtosis is actually better
+# for FARE. Neither distributions pass the Shapiro-Wilk normality test so using lof(FARE) does not seem to make sense,
+# we will stick with the non-logged FARE and re-examine after looking at the x variables. The interpretability may be better then.
 
 
 
@@ -154,27 +160,38 @@ sum(abs(modelResults$.std.resid)>3) #0 outliers three standard deviations away a
 # these removed, and the results improved by using the more lax standard (2).
 sum(abs(modelResults$.std.resid)>2) #25 outliers two standard deviations away and beyond in this model
 subset(modelResults$index,(abs(modelResults$.std.resid)>2)) #Shows the rows containing 25 outliers from the line above
-airData <- airData[-c(61,81,82,93,121,130,304,307,313,342,363,388,392,410,426,445,470,476,483,494,506,525,544,555,570),]; #Removes the 25 outliers
+airData_sub <- airData[-c(61,81,82,93,121,130,304,307,313,342,363,388,392,410,426,445,470,476,483,494,506,525,544,555,570),]; #Removes the 25 outliers
 
 
 #### FINAL REGRESSION EQUATION AND STATS#### -----------------------------------
 lm.Final <- lm(log(FARE) ~ VACATION + SW + log(HI) +
                    S_INCOME + E_INCOME +
                    log(S_POP) + log(E_POP) + SLOT +
-                   GATE + log(DISTANCE) + log(PAX), data = airData)
+                   GATE + log(DISTANCE) + log(PAX), data = airData_sub)
 par(mfrow=(c(2,2)))
 plot(lm.Final)
 
-cor(airData$FARE, exp(lm.Final$fitted.values)) # better
-summary(lm.Final) # R-squared is higher
+cor(airData_sub$FARE, exp(lm.Final$fitted.values)) # better
 
-head(lm.Final)
-
-#final regression equation:Fare = -123.26-31.57*VACATIONYes-76.7*SWYes-11.79*log(HI)-0.02*S_INCOME-18.46*E_INCOME-0.99*log(S_POP)-1.94*log(E_POP)-0.43*SLOTFree+0.45*GATEFree-6.87*log(DISTANCE)-2.25*log(PAX)
+summary(lm.Final)
+#final regression equation: log(FARE) = -123.26-31.57*VACATIONYes-76.7*SWYes-11.79*log(HI)-0.02*S_INCOME-18.46*E_INCOME-0.99*log(S_POP)-1.94*log(E_POP)-0.43*SLOTFree+0.45*GATEFree-6.87*log(DISTANCE)-2.25*log(PAX)
 
 
 #### MODEL SUMMARY #### --------------------------------------------------------
-#TODO: SMITA
+#log(FARE) =
+    #-123.26-31.57*VACATIONYes
+    #-76.7*SWYes
+    #-11.79*log(HI)
+    #-0.02*S_INCOME
+    #-18.46*E_INCOME
+    #-0.99*log(S_POP)
+    #-1.94*log(E_POP)
+    #-0.43*SLOTFree
+    #+0.45*GATEFree
+    #-6.87*log(DISTANCE)
+    #-2.25*log(PAX)
+
+
 
 
 
