@@ -190,7 +190,10 @@ summary(lm.Final)
     #+0.45*GATEFree
     #-6.87*log(DISTANCE)
     #-2.25*log(PAX)
-
+# variables that has negative coffiecients effect the airfare alternatively that is with increase in the value of the variables the airfare decreases 
+#variables such as income,distance,pax,income
+# To make the model a better fit we performed log transformation on some variables.
+# which has made the model a better fit which would help the company to make better future predictions.
 
 
 
