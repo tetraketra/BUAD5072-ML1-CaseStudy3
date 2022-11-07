@@ -145,7 +145,6 @@ lm.bestVars <- lm.mixed_loglog
 
 
 
-
 #### OUTLIERS #### -------------------------------------------------------------
 modelResults <- augment(lm.bestVars) %>% mutate(index = 1:n())
 sum(abs(modelResults$.std.resid)>3) #0 outliers three standard deviations away and beyond in this model
@@ -155,9 +154,19 @@ airData <- airData[-c(61,81,82,93,121,130,304,307,313,342,363,388,392,410,426,44
 
 
 #### FINAL REGRESSION EQUATION AND STATS#### -----------------------------------
-#TODO: JIACAN
+lm.Final <- lm(log(FARE) ~ VACATION + SW + log(HI) +
+                   S_INCOME + E_INCOME +
+                   log(S_POP) + log(E_POP) + SLOT +
+                   GATE + log(DISTANCE) + log(PAX), data = airData)
+par(mfrow=(c(2,2)))
+plot(lm.Final)
 
+cor(airData$FARE, exp(lm.Final$fitted.values)) # better
+summary(lm.Final) # R-squared is higher
 
+head(lm.Final)
+
+#final regression equation:Fare = -123.26-31.57*VACATIONYes-76.7*SWYes-11.79*log(HI)-0.02*S_INCOME-18.46*E_INCOME-0.99*log(S_POP)-1.94*log(E_POP)-0.43*SLOTFree+0.45*GATEFree-6.87*log(DISTANCE)-2.25*log(PAX)
 
 
 #### MODEL SUMMARY #### --------------------------------------------------------
