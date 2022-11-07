@@ -50,8 +50,9 @@ hist(lm.simple.2$residuals)
 mean(lm.simple.2$residuals)
     # Mean is very close to 0, also indicating that it is normally distributed
 
-par(default)
+par(mfrow = c(2, 2))
 plot(lm.simple.2)
+par(default)
 # The first plot Residuals vs Fitted which tests for normality, looks good, no extreme outliers or patterns in the data.
 # The Normal QQ Plot which tests for linearity looks good, the residuals fit on a line very well.
 # Scale-Location looks good as well with a pretty straight horizontal line similar to the first plot and no pattern in the data. This plot tests for homoskedascticity and it appears to be homoskedasctic meaning the variances are constant. This conflicts with the BP Test done below.
