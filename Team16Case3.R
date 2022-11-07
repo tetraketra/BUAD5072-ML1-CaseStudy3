@@ -190,6 +190,20 @@ summary(lm.Final)
     #+0.45*GATEFree
     #-6.87*log(DISTANCE)
     #-2.25*log(PAX)
+#So here we have a log-log model, the process of which involved removing the insignificant variables, removing outliers for more than 2 sd away and finally transforming the variables to create a better linear model. The model has the following implications -
+#when HI is increase by 1 % the FARE reduces by 11.79%
+#when S_POP is increase by 1 % the FARE reduces by 0.99%
+#when E_POP is increase by 1 % the FARE reduces by 1.94%
+#when DISTANCE is increase by 1 % the FARE reduces by 6.87%
+#when PAX is increase by 1 % the FARE reduces by 2.25%
+#when VACATIONYes in increased by 1 unit the FARE reduces by 31.57 units
+#when SWYes in increased by 1 unit the FARE reduces by 76.7 units
+#when S_INCOME in increased by 1 unit the FARE reduces by 0.02 units
+#when E_INCOME in increased by 1 unit the FARE reduces by 18.46 units
+#when SLOTFree in increased by 1 unit the FARE reduces by 0.43 units
+#when GateFree in increased by 1 unit the FARE increases by 0.45 units
+
+#In relation to the Airline industry, this model may help in major future decisions like whether to increase or decrease the airfare to meet their target profit based in the population, income and other predictors. Even the study of interaction could be further done to mitigate the effects of seasons which has low profitability.
 # variables that has negative coffiecients effect the airfare alternatively that is with increase in the value of the variables the airfare decreases 
 #variables such as income,distance,pax,income
 # To make the model a better fit we performed log transformation on some variables.
