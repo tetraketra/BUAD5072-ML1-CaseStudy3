@@ -170,13 +170,24 @@ plot(lm.Final)
 cor(airData_sub$FARE, exp(lm.Final$fitted.values)) # better
 
 summary(lm.Final)
-#final regression equation:Fare = -123.26-31.57*VACATIONYes-76.7*SWYes-11.79*log(HI)-0.02*S_INCOME-18.46*E_INCOME-0.99*log(S_POP)-1.94*log(E_POP)-0.43*SLOTFree+0.45*GATEFree-6.87*log(DISTANCE)-2.25*log(PAX)
+#final regression equation: log(FARE) = -123.26-31.57*VACATIONYes-76.7*SWYes-11.79*log(HI)-0.02*S_INCOME-18.46*E_INCOME-0.99*log(S_POP)-1.94*log(E_POP)-0.43*SLOTFree+0.45*GATEFree-6.87*log(DISTANCE)-2.25*log(PAX)
 
 
 #### MODEL SUMMARY #### --------------------------------------------------------
-#TODO: SMITA
-#some variables were removed and linear model was built again and testing was done 
-after plotting the graph the fitted values looks better with a high r squared 
+#log(FARE) =
+    #-123.26-31.57*VACATIONYes
+    #-76.7*SWYes
+    #-11.79*log(HI)
+    #-0.02*S_INCOME
+    #-18.46*E_INCOME
+    #-0.99*log(S_POP)
+    #-1.94*log(E_POP)
+    #-0.43*SLOTFree
+    #+0.45*GATEFree
+    #-6.87*log(DISTANCE)
+    #-2.25*log(PAX)
+
+
 
 
 
