@@ -155,7 +155,7 @@ lm.bestVars <- lm.mixed_loglog
 modelResults <- augment(lm.bestVars) %>% mutate(index = 1:n()) ## Looking at lm.bestVars and change it to examine the outliers
 sum(abs(modelResults$.std.resid)>3) #0 outliers three standard deviations away and beyond in this model
 ## Since there were no outliers 3 standard deviations away or further, the next step is to instead look at any
-# points potentially influencing the results from two standard deviations and beyond.
+# points potentially influencing the results from tw    o standard deviations and beyond.
 # Here we see some *possible* but not *definite* outliers. We reran the analysis with and without
 # these removed, and the results improved by using the more lax standard (2).
 sum(abs(modelResults$.std.resid)>2) #25 outliers two standard deviations away and beyond in this model
