@@ -151,7 +151,7 @@ modelResults <- augment(lm.bestVars) %>% mutate(index = 1:n())
 sum(abs(modelResults$.std.resid)>3) #0 outliers three standard deviations away and beyond in this model
 sum(abs(modelResults$.std.resid)>2) #25 outliers two standard deviations away and beyond in this model
 subset(modelResults$index,(abs(modelResults$.std.resid)>2)) #Shows the rows containing 25 outliers from the line above
-airData <- airData[-c(61,81,82,93,121,130,304,307,313,342,363,388,392,410,426,445,470,476,483,494,506,525,544,555,570),]; summary(airData) #Removes the 25 outliers
+airData <- airData[-c(61,81,82,93,121,130,304,307,313,342,363,388,392,410,426,445,470,476,483,494,506,525,544,555,570),]; #Removes the 25 outliers
 
 
 #### FINAL REGRESSION EQUATION AND STATS#### -----------------------------------
