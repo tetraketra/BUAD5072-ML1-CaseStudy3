@@ -173,47 +173,29 @@ plot(lm.Final)
 
 cor(airData_sub$FARE, exp(lm.Final$fitted.values)) # better
 
+options(scipen=999)
 summary(lm.Final)
-#final regression equation: log(FARE) = -123.26-31.57*VACATIONYes-76.7*SWYes-11.79*log(HI)-0.02*S_INCOME-18.46*E_INCOME-0.99*log(S_POP)-1.94*log(E_POP)-0.43*SLOTFree+0.45*GATEFree-6.87*log(DISTANCE)-2.25*log(PAX)
 
-
-#### MODEL SUMMARY #### --------------------------------------------------------
 #log(FARE) =
-    #-123.26-31.57*VACATIONYes
-    #-76.7*SWYes
-    #-11.79*log(HI)
-    #-0.02*S_INCOME
-    #-18.46*E_INCOME
-    #-0.99*log(S_POP)
-    #-1.94*log(E_POP)
-    #-0.43*SLOTFree
-    #+0.45*GATEFree
-    #-6.87*log(DISTANCE)
-    #-2.25*log(PAX)
-<<<<<<< HEAD
-#So here we have a log-log model, the process of which involved removing the insignificant variables, removing outliers for more than 2 sd away and finally transforming the variables to create a better linear model. The model has the following implications -
-#when HI is increase by 1 % the FARE reduces by 11.79%
-#when S_POP is increase by 1 % the FARE reduces by 0.99%
-#when E_POP is increase by 1 % the FARE reduces by 1.94%
-#when DISTANCE is increase by 1 % the FARE reduces by 6.87%
-#when PAX is increase by 1 % the FARE reduces by 2.25%
-#when VACATIONYes in increased by 1 unit the FARE reduces by 31.57 units
-#when SWYes in increased by 1 unit the FARE reduces by 76.7 units
-#when S_INCOME in increased by 1 unit the FARE reduces by 0.02 units
-#when E_INCOME in increased by 1 unit the FARE reduces by 18.46 units
-#when SLOTFree in increased by 1 unit the FARE reduces by 0.43 units
-#when GateFree in increased by 1 unit the FARE increases by 0.45 units
+    #-0.2159
+    #-0.2215*VACATIONYes        #when VACATION is YES, the FARE reduces by 22.15 units
+    #-0.3584*SWYes              #when Southwest is servicing a route, FARE reduces by 35.84 units
+    #+0.0973*log(HI)            #when HI is increase by 1% the FARE increases by almost 0.1%
+    #+0.000012449*S_INCOME      #when S_INCOME in increased by 1 unit the FARE increases by 0.0012449 units. The coefficient is small because S_INCOME is large.
+    #+0.000010118*E_INCOME      #when E_INCOME in increased by 1 unit the FARE increases by 0.0010118 units. THe coefficient is small because E_INCOME is large.
+    #+0.0976*log(S_POP)         #when S_POP is increased by 1% the FARE increases by almost 0.1%.
+    #+0.1061*log(E_POP)         #when E_POP is increased by 1% the FARE increases by just over 0.1%
+    #-0.1019*SLOTFree           #when SLOT is Free, the FARE reduces by 10.19 units.
+    #-0.1373*GATEFree           #when GATE is Free, the FARE reduces by 13.73 units.
+    #+0.3791*log(DISTANCE)      #when DISTANCE is increase by 1% the FARE increases by just under 0.38%.
+    #-0.1565*log(PAX)           #when PAX is increase by 1% the FARE reduces by just over 0.15%.
 
-#In relation to the Airline industry, this model may help in major future decisions like whether to increase or decrease the airfare to meet their target profit based in the population, income and other predictors. Even the study of interaction could be further done to mitigate the effects of seasons which has low profitability.
-# variables that has negative coffiecients effect the airfare alternatively that is with increase in the value of the variables the airfare decreases 
-#variables such as income,distance,pax,income
-=======
-# variables that has negative coffiecients effect the airfare alternatively that is with increase in the value of the variables the airfare decreases
-# variables such as income,distance,pax,income
->>>>>>> b94e4c6f2eacb261a20939fd2601b162985820dd
-# To make the model a better fit we performed log transformation on some variables.
-# which has made the model a better fit which would help the company to make better future predictions.
-
+# This model uses VACATION, SW, HI, S/E_INCOME, S/E_POP, SLOT, GATE, DISTANCE, and PAX to predict FARE with a predictive correlation of above 90%.
+# To make the model a better fit we performed log transformation on the dependent variable and some independent variables.
+# This model can be used to confidently predict a reasonable FARE for given routes when a new airport is brought into service.
+    # Notably, Southwest's presence massively decreased FARE price. Competition lowers prices.
+    # Along the same lines, more market congestion (as measured by the Herfindahl Index, HI) also reduced prices.
+    # Long routes intuitively increase fares at a surprisingly comparable ratio.
 
 
 
