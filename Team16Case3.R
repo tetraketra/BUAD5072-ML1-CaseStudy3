@@ -151,7 +151,9 @@ lm.bestVars <- lm.mixed_loglog
 
 
 
+
 #### OUTLIERS #### -------------------------------------------------------------
+
 modelResults <- augment(lm.bestVars) %>% mutate(index = 1:n()) ## Looking at lm.bestVars and change it to examine the outliers
 sum(abs(modelResults$.std.resid)>3) #0 outliers three standard deviations away and beyond in this model
 ## Since there were no outliers 3 standard deviations away or further, the next step is to instead look at any
@@ -163,7 +165,10 @@ subset(modelResults$index,(abs(modelResults$.std.resid)>2)) #Shows the rows cont
 airData_sub <- airData[-c(61,81,82,93,121,130,304,307,313,342,363,388,392,410,426,445,470,476,483,494,506,525,544,555,570),]; #Removes the 25 outliers
 
 
+
+
 #### FINAL REGRESSION EQUATION AND STATS#### -----------------------------------
+
 lm.Final <- lm(log(FARE) ~ VACATION + SW + log(HI) +
                    S_INCOME + E_INCOME +
                    log(S_POP) + log(E_POP) + SLOT +
@@ -196,6 +201,3 @@ summary(lm.Final)
     # Notably, Southwest's presence massively decreased FARE price. Competition lowers prices.
     # Along the same lines, more market congestion (as measured by the Herfindahl Index, HI) also reduced prices.
     # Long routes intuitively increase fares at a surprisingly comparable ratio.
-
-
-
