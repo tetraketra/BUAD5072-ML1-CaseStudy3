@@ -190,6 +190,7 @@ summary(lm.Final)
     #+0.45*GATEFree
     #-6.87*log(DISTANCE)
     #-2.25*log(PAX)
+<<<<<<< HEAD
 #So here we have a log-log model, the process of which involved removing the insignificant variables, removing outliers for more than 2 sd away and finally transforming the variables to create a better linear model. The model has the following implications -
 #when HI is increase by 1 % the FARE reduces by 11.79%
 #when S_POP is increase by 1 % the FARE reduces by 0.99%
@@ -206,6 +207,10 @@ summary(lm.Final)
 #In relation to the Airline industry, this model may help in major future decisions like whether to increase or decrease the airfare to meet their target profit based in the population, income and other predictors. Even the study of interaction could be further done to mitigate the effects of seasons which has low profitability.
 # variables that has negative coffiecients effect the airfare alternatively that is with increase in the value of the variables the airfare decreases 
 #variables such as income,distance,pax,income
+=======
+# variables that has negative coffiecients effect the airfare alternatively that is with increase in the value of the variables the airfare decreases
+# variables such as income,distance,pax,income
+>>>>>>> b94e4c6f2eacb261a20939fd2601b162985820dd
 # To make the model a better fit we performed log transformation on some variables.
 # which has made the model a better fit which would help the company to make better future predictions.
 
